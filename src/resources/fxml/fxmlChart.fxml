@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.net.*?>
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../cascade_style/lcd.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlChartController">
+   <right>
+      <VBox fx:id="vbox" alignment="TOP_CENTER" prefHeight="600.0" prefWidth="200.0" spacing="30.0" BorderPane.alignment="CENTER">
+         <children>
+            <DatePicker fx:id="startDate" editable="false" promptText="%datepic1">
+               <VBox.margin>
+                  <Insets top="70.0" />
+               </VBox.margin>
+               <tooltip>
+                  <Tooltip text="%datepic1_tp" />
+               </tooltip>
+            </DatePicker>
+            <DatePicker fx:id="endDate" editable="false" promptText="%datepic2">
+               <tooltip>
+                  <Tooltip text="%datepic2_tp" />
+               </tooltip></DatePicker>
+            <Button fx:id="btnResult" minWidth="176.0" mnemonicParsing="false" onAction="#getResult" text="%cht_btn1" textFill="#40645d">
+               <font>
+                  <Font name="Times New Roman Bold" size="18.0" />
+               </font>
+               <tooltip>
+                  <Tooltip text="%cht_btn1_tp" />
+               </tooltip>
+            </Button>
+            <Button fx:id="btnClear" minWidth="176.0" mnemonicParsing="false" onAction="#clear" text="%cht_btn2" textFill="#40645d">
+               <font>
+                  <Font name="Times New Roman Bold" size="18.0" />
+               </font>
+               <tooltip>
+                  <Tooltip text="%cht_btn2_tp" />
+               </tooltip>
+            </Button>
+         </children>
+      </VBox>
+   </right>
+   <center>
+      <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0" stylesheets="@../cascade_style/main.css" BorderPane.alignment="CENTER">
+         <children>
+            <LineChart fx:id="lineChart" animated="false">
+              <xAxis>
+                <CategoryAxis side="BOTTOM" fx:id="xAxis" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis fx:id="yAxis" minorTickLength="10.0" side="LEFT" tickLength="18.0" tickUnit="0.075" upperBound="0.0" />
+              </yAxis>
+            </LineChart>
+            <ProgressIndicator fx:id="prgIndicator" maxHeight="250.0" maxWidth="250.0" visible="false" />
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>

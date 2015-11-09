@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="stackPane" minHeight="300.0" minWidth="300.0" stylesheets="@../cascade_style/round.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlChangeLanguageController">
+   <children>
+      <ImageView fx:id="imgGlob" fitHeight="250.0" fitWidth="300.0">
+         <image>
+            <Image url="@../images/globe.png" />
+         </image>
+      </ImageView>
+      <ImageView id="imgAZ" onMouseClicked="#setLangAZ">
+         <image>
+            <Image url="@../images/az_64.png" />
+         </image>
+         <StackPane.margin>
+            <Insets bottom="130.0" left="128.0" />
+         </StackPane.margin>
+      </ImageView>
+      <ImageView id="imgEN" onMouseClicked="#setLangEN">
+         <image>
+            <Image url="@../images/en_64.png" />
+         </image>
+         <StackPane.margin>
+            <Insets bottom="170.0" right="10.0" />
+         </StackPane.margin>
+      </ImageView>
+      <Text fx:id="txtTitle" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0">
+         <font>
+            <Font name="Times New Roman Bold" size="36.0" />
+         </font>
+         <StackPane.margin>
+            <Insets top="250.0" />
+         </StackPane.margin>
+      </Text>
+   </children>
+</StackPane>

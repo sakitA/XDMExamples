@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane alignment="BOTTOM_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="415.0" prefWidth="684.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="415.0" fitWidth="684.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/3094.jpg" />
+         </image>
+      </ImageView>
+      <ProgressBar fx:id="prgBar" prefHeight="20.0" prefWidth="150.0" progress="0.0" stylesheets="@../cascade_style/iphone.css">
+         <StackPane.margin>
+            <Insets bottom="15.0" left="15.0" />
+         </StackPane.margin>
+         <effect>
+            <DropShadow color="#ebd10e" height="62.51" radius="21.119999999999997" spread="0.14" width="23.97" />
+         </effect>
+      </ProgressBar>
+      <Text fx:id="txtProg" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER">
+         <font>
+            <Font name="Times New Roman Bold" size="14.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="17.0" left="40.0" />
+         </StackPane.margin>
+      </Text>
+   </children>
+</StackPane>

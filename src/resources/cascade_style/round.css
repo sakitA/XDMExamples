@@ -1,0 +1,17 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 5, 2015, 5:06:42 PM
+    Author     : sakit
+*/
+
+#imgAZ:hover{    
+    -fx-effect:dropshadow(three-pass-box,#d62e19,10.0,0.90,0.0,0.0);
+}
+
+#imgEN:hover{    
+    -fx-effect:dropshadow(three-pass-box,#d62e19,10.0,0.90,0.0,0.0);
+}

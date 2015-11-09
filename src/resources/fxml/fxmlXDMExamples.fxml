@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<TabPane stylesheets="@../cascade_style/main.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlXDMExamplesController">
+    <tabs>
+        <Tab fx:id="tbReg" text="%tbReg">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../images/reg.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <fx:include fx:id="fx_registry" source="fxmlRegistry.fxml" />
+            </content>
+         <tooltip>
+            <Tooltip text="%tab1_tp" />
+         </tooltip>
+        </Tab>
+        <Tab fx:id="tbCht" text="%tbCht">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../images/chart.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <fx:include fx:id="fx_chart" source="fxmlChart.fxml" />
+            </content>
+         <tooltip>
+            <Tooltip text="%tab2_tp" />
+         </tooltip>
+        </Tab>
+        <Tab fx:id="tbDwn" text="%tbDwn">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../images/download.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <fx:include fx:id="fx_download" source="fxmlDownload.fxml" />
+            </content>
+         <tooltip>
+            <Tooltip text="%tab3_tp" />
+         </tooltip>
+        </Tab>    
+        <Tab fx:id="tbPro" text="%tbPro">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../images/process.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <fx:include fx:id="fx_process" source="fxmlProcess.fxml" />
+            </content>
+         <tooltip>
+            <Tooltip text="%tab4_tp" />
+         </tooltip>
+        </Tab>
+        <Tab fx:id="tbInf" text="%tbInf">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../images/information.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <fx:include fx:id="fx_info" source="fxmlInformation.fxml" />
+            </content>
+         <tooltip>
+            <Tooltip text="%tab5_tp" />
+         </tooltip>
+        </Tab>
+    </tabs>
+</TabPane>

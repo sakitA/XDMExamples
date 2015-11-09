@@ -1,0 +1,15 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 8, 2015, 11:59:48 AM
+    Author     : sakit
+*/
+
+.tooltip {
+    -fx-font: 16px "Serif";
+    -fx-font-size:14pt;
+    -fx-text-fill: #00ff00    
+}
