@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlDownloadController">
-    
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlDownloadController">
+   <top>
+      <HBox alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="urlText" prefHeight="25.0" prefWidth="360.0" promptText="%url_txt" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="Times New Roman" size="18.0" />
+               </font>
+            </TextField>
+            <Button fx:id="btnDownload" disable="true" minHeight="35.0" minWidth="170.0" mnemonicParsing="false" onAction="#download" text="%btn_dwn" HBox.hgrow="NEVER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font name="Times New Roman Bold" size="18.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnCancel" disable="true" minHeight="35.0" minWidth="170.0" mnemonicParsing="false" onAction="#cancelAll" text="%btn_cnl" HBox.hgrow="NEVER">
+               <font>
+                  <Font name="Times New Roman Bold" size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <ProgressIndicator fx:id="prgIndicator" progress="0.0" visible="false">
+               <HBox.margin>
+                  <Insets right="15.0" />
+               </HBox.margin>
+            </ProgressIndicator>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox fx:id="vbox" prefHeight="200.0" prefWidth="100.0" spacing="5.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

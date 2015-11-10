@@ -8,9 +8,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane fx:id="stackPane" minHeight="300.0" minWidth="300.0" stylesheets="@../cascade_style/round.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlChangeLanguageController">
+<StackPane fx:id="stackPane" stylesheets="@../cascade_style/round.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlChangeLanguageController">
    <children>
-      <ImageView fx:id="imgGlob" fitHeight="250.0" fitWidth="300.0">
+      <ImageView fx:id="imgGlob" fitHeight="240.0" fitWidth="280.0">
          <image>
             <Image url="@../images/globe.png" />
          </image>

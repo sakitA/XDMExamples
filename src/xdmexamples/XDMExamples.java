@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.application.Preloader;
