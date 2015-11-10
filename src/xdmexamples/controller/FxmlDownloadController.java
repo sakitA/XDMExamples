@@ -5,14 +5,13 @@
  */
 package xdmexamples.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,11 +25,12 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import xdmexamples.preloader.Keys;
 
@@ -76,14 +76,18 @@ public class FxmlDownloadController implements Initializable {
         String fileName = "", fileLocation = "";
         while (fileName.isEmpty()) {
             fileName = getFileName();
+            if(fileName==null)
+                break;
         }
         while (fileLocation.isEmpty()) {
             fileLocation = getFileLocation();
+            if(fileLocation==null)
+                break;
         }
         if (fileName != null && fileLocation != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
-                TilePane tp = (TilePane)loader.load();
+                TitledPane tp = (TitledPane)loader.load();
                 FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
                 fcdc.initData(fileName, fileLocation);
                 vbox.getChildren().add(tp);
@@ -142,10 +146,9 @@ public class FxmlDownloadController implements Initializable {
 
         if (type == Alert.AlertType.CONFIRMATION) {
             ButtonType btnYes = new ButtonType(bundle.getString(Keys.YES), ButtonBar.ButtonData.YES);
-            ButtonType btnCancel = new ButtonType(bundle.getString(Keys.CANCEL), ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType btnCnl = new ButtonType(bundle.getString(Keys.CANCEL), ButtonBar.ButtonData.CANCEL_CLOSE);
 
-            alert.getButtonTypes().setAll(btnYes, btnCancel);
-
+            alert.getButtonTypes().setAll(btnYes, btnCnl);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == btnYes) {
 
@@ -171,6 +174,10 @@ public class FxmlDownloadController implements Initializable {
     }
 
     private String getFileLocation() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        DirectoryChooser dc = new DirectoryChooser();
+        dc.setInitialDirectory(new File(System.getProperty("user.home")));
+        dc.setTitle(bundle.getString(Keys.DWN_MSG2));
+        File location = dc.showDialog(null);
+        return location!=null? location.getAbsolutePath():null;
     }
 }

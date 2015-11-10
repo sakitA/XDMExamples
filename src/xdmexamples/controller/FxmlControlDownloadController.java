@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TitledPane;
 import javafx.scene.text.Text;
 
 /**
@@ -31,7 +32,11 @@ public class FxmlControlDownloadController implements Initializable {
     @FXML private Button btnResume;
     @FXML private ProgressBar prgBar;
     @FXML private ResourceBundle bundle;
+    @FXML private TitledPane titledPane;
     /*----------------------------------End of FXML decleration-----------------------*/
+    
+    private String fileName;
+    private String fileLocation;
 
     /**
      * Initializes the controller class.
@@ -41,6 +46,8 @@ public class FxmlControlDownloadController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        bundle = rb;        
+        
     }    
     
     @FXML
@@ -55,7 +62,10 @@ public class FxmlControlDownloadController implements Initializable {
     @FXML
     private void dwnResume(){}
 
-    void initData(String fileName, String fileLocation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void initData(String fileName, String fileLocation) {
+        this.fileName = fileName;
+        this.fileLocation = fileLocation;
+        
+        titledPane.setText(fileName+"("+fileLocation+")");
     }
 }
