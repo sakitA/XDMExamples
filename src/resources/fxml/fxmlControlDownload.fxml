@@ -74,7 +74,7 @@
                               <Font name="Times New Roman Bold" size="18.0" />
                            </font>
                         </Text>
-                        <Text fx:id="fileSize" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
+                        <Text fx:id="txtSize" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="Times New Roman" size="18.0" />
                            </font>
@@ -99,7 +99,12 @@
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnStop" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnStop" text="%dwn_btn4" HBox.hgrow="ALWAYS">
+                  <Button fx:id="btnStop" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnStop" text="%dwn_btn4" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="Times New Roman Bold" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnOpen" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openFile" text="%dwn_btn5" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>

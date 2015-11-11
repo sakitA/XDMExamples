@@ -12,7 +12,11 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -56,6 +60,11 @@ public class FxmlDownloadController implements Initializable {
     private ResourceBundle bundle;
     /*----------------------------------End of FXML decleration-----------------------*/
 
+    private Task worker;
+    private final BooleanProperty ready = new SimpleBooleanProperty(false);
+    private String fileName = "", fileLocation = "";
+    private TitledPane tp = null;
+
     /**
      * Initializes the controller class.
      *
@@ -73,28 +82,35 @@ public class FxmlDownloadController implements Initializable {
 
     @FXML
     private void download() {
-        String fileName = "", fileLocation = "";
+        ready.setValue(Boolean.FALSE);
         while (fileName.isEmpty()) {
             fileName = getFileName();
-            if(fileName==null)
+            if (fileName == null) {
                 break;
+            }
         }
         while (fileLocation.isEmpty()) {
             fileLocation = getFileLocation();
-            if(fileLocation==null)
+            if (fileLocation == null) {
                 break;
-        }
-        if (fileName != null && fileLocation != null) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
-                TitledPane tp = (TitledPane)loader.load();
-                FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
-                fcdc.initData(fileName, fileLocation);
-                vbox.getChildren().add(tp);
-            } catch (IOException ex) {
-                showErrorMessage(ex.getMessage(), ex);
             }
         }
+        if (fileName != null && fileLocation != null) {
+            prgIndicator.setVisible(true);
+            prgIndicator.setProgress(-1);
+            worker = createTask();
+            ready.addListener((ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) -> {
+                if (Boolean.TRUE.equals(t1)) {
+                    Platform.runLater(() -> {
+                        System.out.println("Download started");
+                        prgIndicator.setVisible(false);
+                        vbox.getChildren().add(tp);
+                        //ready.setValue(Boolean.FALSE);
+                    });
+                }
+            });
+        }
+        new Thread(worker).start();
     }
 
     @FXML
@@ -177,7 +193,24 @@ public class FxmlDownloadController implements Initializable {
         DirectoryChooser dc = new DirectoryChooser();
         dc.setInitialDirectory(new File(System.getProperty("user.home")));
         dc.setTitle(bundle.getString(Keys.DWN_MSG2));
-        File location = dc.showDialog(null);
-        return location!=null? location.getAbsolutePath():null;
+        File location = dc.showDialog(btnDownload.getScene().getWindow());
+        return location != null ? location.getAbsolutePath() : null;
+    }
+
+    private Task createTask() {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+                if (!isCancelled()) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
+                    tp = (TitledPane) loader.load();
+                    FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
+                    fcdc.initData(urlText.getText(), fileName, fileLocation);
+                    ready.setValue(Boolean.TRUE);
+                } else
+                    ready.setValue(Boolean.FALSE);
+                return true;
+            }
+        };
     }
 }
