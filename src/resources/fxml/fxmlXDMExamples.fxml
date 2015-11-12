@@ -84,5 +84,20 @@
             <Tooltip text="%tab5_tp" />
          </tooltip>
         </Tab>
+        <Tab fx:id="tbCS" text="%tbCS">
+            <graphic>
+                <ImageView>
+                    <image>
+                        <Image url="@../images/clients.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+            <content>
+                <fx:include fx:id="fx_cs" source="fxmlClientServer.fxml" />
+            </content>
+         <tooltip>
+            <Tooltip text="%tab6_tp" />
+         </tooltip>
+        </Tab>
     </tabs>
 </TabPane>

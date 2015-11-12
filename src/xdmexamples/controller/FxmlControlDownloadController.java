@@ -20,6 +20,9 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -92,7 +95,7 @@ public class FxmlControlDownloadController implements Initializable {
     private int fileSize;
     private boolean dwnStop;
     private int bytesRead;
-    private final static int BUFFER_SIZE = 1000;
+    private final static int BUFFER_SIZE = 1024;
     private final BooleanProperty ready = new SimpleBooleanProperty(false);
     private Task worker;
     private Thread thread;
@@ -125,9 +128,9 @@ public class FxmlControlDownloadController implements Initializable {
                 @Override
                 public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
                     if (!(newValue instanceof Boolean)) {
-                        int per = (int) (100.0 * (Integer)newValue / fileSize);
+                        int per = (int) (100.0 * (Integer) newValue / fileSize);
                         percentage.setText(String.valueOf(per) + " %");
-                        dwnFileSize.setText(newValue.toString()+" bytes");
+                        dwnFileSize.setText(newValue.toString() + " bytes");
                     }
                 }
             });
@@ -163,12 +166,13 @@ public class FxmlControlDownloadController implements Initializable {
     @FXML
     private void dwnResume() {
     }
-    
+
     @FXML
-    private void openFile(){}
+    private void openFile() {
+    }
 
     public void initData(String url, String fileName, String fileLocation) {
-        
+
         this.fileName = fileName;
         this.fileLocation = fileLocation;
         bytesRead = 0;
@@ -180,24 +184,27 @@ public class FxmlControlDownloadController implements Initializable {
             if (fileSize == -1) {
                 throw new FileNotFoundException(url);
             }
-            inputStream = new BufferedInputStream(urlConnection.getInputStream());
+
             buffer = new byte[BUFFER_SIZE];
             dwnStop = false;
-
-            path = fileLocation + File.separator + fileName
-                    + url.substring(url.lastIndexOf("."), url.length());
+            String ext = url.substring(url.lastIndexOf("."));
+            path = fileLocation + File.separator + fileName+ext;
             File file = new File(path);
             outputStream = new FileOutputStream(file);
+            inputStream = new BufferedInputStream(
+                    urlConnection.getInputStream());
+           
         } catch (MalformedURLException | FileNotFoundException ex) {
             showErrorMessage(ex.getMessage(), ex);
         } catch (IOException ex) {
+            System.err.println(ex.getMessage());
             showErrorMessage(ex.getMessage(), ex);
         }
 
         titledPane.setText(fileName + "(" + path + ")");
         fileAddress.setText(url);
         txtSize.setText(String.valueOf(fileSize) + " bytes");
-        
+
     }
 
     private void showErrorMessage(String message, Exception... excp) {
@@ -232,7 +239,10 @@ public class FxmlControlDownloadController implements Initializable {
             // Set expandable Exception into the dialog pane.
             alert.getDialogPane().setExpandableContent(expContent);
         }
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            alert.showAndWait();
+        });
+
     }
 
     private Task createTask() {

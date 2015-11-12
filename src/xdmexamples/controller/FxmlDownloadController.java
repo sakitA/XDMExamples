@@ -180,7 +180,7 @@ public class FxmlDownloadController implements Initializable {
         dialog.setTitle(bundle.getString(Keys.FLNM));
         dialog.setHeaderText(bundle.getString(Keys.PRG_NAME));
         dialog.setContentText(bundle.getString(Keys.ENT_FLNM));
-
+        dialog.getEditor().setPromptText("example.txt");
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
@@ -202,13 +202,22 @@ public class FxmlDownloadController implements Initializable {
             @Override
             protected Object call() throws Exception {
                 if (!isCancelled()) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
-                    tp = (TitledPane) loader.load();
-                    FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
-                    fcdc.initData(urlText.getText(), fileName, fileLocation);
-                    ready.setValue(Boolean.TRUE);
-                } else
+
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
+                        tp = (TitledPane) loader.load();
+                        FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
+                        fcdc.initData(urlText.getText(), fileName, fileLocation);
+                        ready.setValue(Boolean.TRUE);
+                        //vbox.getChildren().add(tp);
+                        //ready.setValue(Boolean.FALSE);
+                    } catch (IOException ex) {
+                        showErrorMessage(ex.getMessage(), ex);
+                    }
+
+                } else {
                     ready.setValue(Boolean.FALSE);
+                }
                 return true;
             }
         };

@@ -8,18 +8,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane fx:id="titledPane" text="%dwn_title" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlControlDownloadController">
+<TitledPane fx:id="titledPane" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="850.0" text="%dwn_title" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlControlDownloadController">
    <content>
-      <VBox spacing="7.0">
+      <VBox maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="820.0" spacing="7.0">
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="25.0">
+            <HBox alignment="CENTER_LEFT" spacing="25.0" VBox.vgrow="NEVER">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%dwn_txt1" HBox.hgrow="NEVER">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
                   </Text>
-                  <Text fx:id="fileAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
+                  <Text fx:id="fileAddress" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="717.0" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Times New Roman" size="18.0" />
                      </font>
@@ -29,7 +29,7 @@
                   </Text>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" maxHeight="30.0" spacing="25.0">
+            <HBox alignment="CENTER_LEFT" spacing="25.0" VBox.vgrow="NEVER">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%dwn_txt2" HBox.hgrow="NEVER">
                      <font>
@@ -38,7 +38,7 @@
                   </Text>
                   <StackPane HBox.hgrow="ALWAYS">
                      <children>
-                        <ProgressBar fx:id="prgBar" maxWidth="1.7976931348623157E308" prefHeight="18.0" progress="0.0" HBox.hgrow="ALWAYS" StackPane.alignment="CENTER">
+                        <ProgressBar fx:id="prgBar" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="600.0" progress="0.0" HBox.hgrow="ALWAYS" StackPane.alignment="CENTER">
                            <StackPane.margin>
                               <Insets top="2.0" />
                            </StackPane.margin></ProgressBar>
@@ -51,7 +51,7 @@
                   </StackPane>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" maxHeight="30.0" spacing="25.0">
+            <HBox alignment="CENTER_LEFT" spacing="25.0" VBox.vgrow="NEVER">
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="3.0" HBox.hgrow="ALWAYS">
                      <children>
@@ -82,7 +82,7 @@
                      </children>
                   </HBox>
                </children></HBox>
-            <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="NEVER">
+            <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="720.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button fx:id="btnStart" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnStart" text="%dwn_btn1" HBox.hgrow="ALWAYS">
                      <font>

@@ -12,7 +12,7 @@
    <children>
       <HBox alignment="CENTER" spacing="30.0" VBox.vgrow="NEVER">
          <children>
-            <TextField fx:id="urlText" prefHeight="25.0" prefWidth="360.0" promptText="%url_txt" HBox.hgrow="ALWAYS">
+            <TextField fx:id="urlText" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="360.0" promptText="%url_txt" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets left="15.0" />
                </HBox.margin>
@@ -36,7 +36,7 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <ProgressIndicator fx:id="prgIndicator" visible="false" HBox.hgrow="ALWAYS">
+            <ProgressIndicator fx:id="prgIndicator" maxHeight="30.0" maxWidth="30.0" visible="false" HBox.hgrow="NEVER">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
