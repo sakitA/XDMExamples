@@ -94,6 +94,7 @@ public class FxmlControlDownloadController implements Initializable {
     private String fileLocation;
     private int fileSize;
     private boolean dwnStop;
+    private boolean dwnSuspend;
     private int bytesRead;
     private final static int BUFFER_SIZE = 1024;
     private final BooleanProperty ready = new SimpleBooleanProperty(false);
@@ -111,6 +112,12 @@ public class FxmlControlDownloadController implements Initializable {
         // TODO
         bundle = rb;
         dwnStop = false;
+        dwnSuspend = false;
+        btnStart.setDisable(false);
+        btnStop.setDisable(true);
+        btnPause.setDisable(true);
+        btnResume.setDisable(true);
+        btnOpen.setDisable(true);
     }
 
     @FXML
@@ -121,6 +128,7 @@ public class FxmlControlDownloadController implements Initializable {
             btnStop.setDisable(false);
             btnPause.setDisable(false);
             btnResume.setDisable(true);
+            btnOpen.setDisable(true);
 
             worker = createTask();
             worker.valueProperty().addListener(new ChangeListener<Object>() {
@@ -149,22 +157,35 @@ public class FxmlControlDownloadController implements Initializable {
                 }
             });
             thread = new Thread(worker);
+            thread.setName(fileName);
             //thread.setDaemon(true);
             thread.start();
+            System.out.println(thread.getName()+" thread started");
         }
     }
 
     @FXML
     private void dwnStop() {
-        System.exit(0);
+        setStopped(true);
+        btnStart.setDisable(false);
+        btnStop.setDisable(true);
+        btnPause.setDisable(true);
+        btnResume.setDisable(true);
+        btnOpen.setDisable(true);
     }
 
     @FXML
     private void dwnPause() {
+        setSuspended(true);
+        btnPause.setDisable(true);
+        btnResume.setDisable(false);
     }
 
     @FXML
     private void dwnResume() {
+        btnPause.setDisable(false);
+        btnResume.setDisable(true);
+        resumeThread();
     }
 
     @FXML
@@ -186,14 +207,13 @@ public class FxmlControlDownloadController implements Initializable {
             }
 
             buffer = new byte[BUFFER_SIZE];
-            dwnStop = false;
             String ext = url.substring(url.lastIndexOf("."));
-            path = fileLocation + File.separator + fileName+ext;
+            path = fileLocation + File.separator + fileName + ext;
             File file = new File(path);
             outputStream = new FileOutputStream(file);
             inputStream = new BufferedInputStream(
                     urlConnection.getInputStream());
-           
+
         } catch (MalformedURLException | FileNotFoundException ex) {
             showErrorMessage(ex.getMessage(), ex);
         } catch (IOException ex) {
@@ -204,7 +224,6 @@ public class FxmlControlDownloadController implements Initializable {
         titledPane.setText(fileName + "(" + path + ")");
         fileAddress.setText(url);
         txtSize.setText(String.valueOf(fileSize) + " bytes");
-
     }
 
     private void showErrorMessage(String message, Exception... excp) {
@@ -251,7 +270,7 @@ public class FxmlControlDownloadController implements Initializable {
             protected Object call() throws Exception {
                 int byteCount = -1;
                 //A correct implementation of a Task will always check for cancellation.
-                while (!isCancelled() && (bytesRead < fileSize) && !dwnStop) {
+                while (!isStopped() && (bytesRead < fileSize) && !dwnStop) {
                     try {
                         byteCount = inputStream.read(buffer);
                         if (byteCount == -1) {
@@ -268,6 +287,19 @@ public class FxmlControlDownloadController implements Initializable {
                         dwnStop = true;
                         showErrorMessage(ioe.getMessage(), ioe);
                         break;
+                    }finally{
+                        setStopped(true);
+                    }
+                    synchronized (this) {
+                        try {
+                            if (isSuspended()) {
+                                System.out.println(thread.getName() + " thread waiting....");
+                                setSuspended(false);
+                                this.wait();
+                            }
+                        } catch (InterruptedException e) {
+                            showErrorMessage(e.getMessage(), e);
+                        }
                     }
                 }
                 outputStream.close();
@@ -332,5 +364,26 @@ public class FxmlControlDownloadController implements Initializable {
         btnStop.setDisable(true);
         btnResume.setDisable(true);
         btnPause.setDisable(true);
+    }
+
+    private synchronized boolean isSuspended() {
+        return dwnSuspend;
+    }
+
+    private synchronized void setSuspended(boolean wait) {
+        dwnSuspend = wait;
+    }
+    
+    private synchronized boolean isStopped(){
+        return dwnStop;
+    }
+    
+    private synchronized void setStopped(boolean stop){
+        dwnStop = stop;
+    }
+    
+    private synchronized void resumeThread(){
+        System.out.println(thread.getName()+" return is called");
+        this.notify();
     }
 }

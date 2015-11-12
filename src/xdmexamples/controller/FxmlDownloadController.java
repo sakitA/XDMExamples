@@ -211,7 +211,7 @@ public class FxmlDownloadController implements Initializable {
                         ready.setValue(Boolean.TRUE);
                         //vbox.getChildren().add(tp);
                         //ready.setValue(Boolean.FALSE);
-                    } catch (IOException ex) {
+                    } catch (Exception ex) {
                         showErrorMessage(ex.getMessage(), ex);
                     }
 
