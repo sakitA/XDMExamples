@@ -42,46 +42,15 @@
                            <StackPane.margin>
                               <Insets top="2.0" />
                            </StackPane.margin></ProgressBar>
-                        <Text fx:id="percentage" strokeType="OUTSIDE" strokeWidth="0.0" text="0%">
+                        <Label fx:id="percentage" text="%unkown">
                            <font>
                               <Font name="Times New Roman Bold" size="14.0" />
                            </font>
-                        </Text>
+                        </Label>
                      </children>
                   </StackPane>
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="25.0" VBox.vgrow="NEVER">
-               <children>
-                  <HBox alignment="CENTER_LEFT" spacing="3.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%dwn_txt3" HBox.hgrow="NEVER">
-                           <font>
-                              <Font name="Times New Roman Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text fx:id="dwnFileSize" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font name="Times New Roman" size="18.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" spacing="5.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%dwn_txt4" HBox.hgrow="NEVER">
-                           <font>
-                              <Font name="Times New Roman Bold" size="18.0" />
-                           </font>
-                        </Text>
-                        <Text fx:id="txtSize" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font name="Times New Roman" size="18.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </HBox>
-               </children></HBox>
             <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="720.0" spacing="10.0" VBox.vgrow="NEVER">
                <children>
                   <Button fx:id="btnStart" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnStart" text="%dwn_btn1" HBox.hgrow="ALWAYS">
@@ -99,7 +68,7 @@
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnStop" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnStop" text="%dwn_btn4" HBox.hgrow="ALWAYS">
+                  <Button fx:id="btnCancel" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnCancel" text="%cancel" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>

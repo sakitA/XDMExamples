@@ -43,6 +43,6 @@
             </ProgressIndicator>
          </children>
       </HBox>
-      <VBox fx:id="vbox" spacing="5.0" />
+      <VBox fx:id="vbox" spacing="5.0" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>
