@@ -66,7 +66,7 @@ public class FxmlDownloadController implements Initializable {
     @FXML
     private void download() {
         String name = urlText.getText();
-        fileName = name.substring(name.lastIndexOf("/") + 1);
+        fileName = name.substring(name.lastIndexOf("/") + 1).trim();
         fileLocation = getFileLocation();
 
         task = createWork(fileName, fileLocation);
@@ -134,7 +134,10 @@ public class FxmlDownloadController implements Initializable {
                 super.succeeded();
                 System.out.println(thread.getName() + " the task was succeeded");
                 vbox.getChildren().add(ttlPane);
+                prgIndicator.progressProperty().unbind();
+                prgIndicator.setProgress(0);
                 btnCancel.setDisable(false);
+                
             }
         };
     }

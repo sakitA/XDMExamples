@@ -1,11 +1,18 @@
 package xdmexamples.controller;
 
 import java.awt.Desktop;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.concurrent.Task;
@@ -65,18 +72,18 @@ public class FxmlControlDownloadController implements Initializable {
     @FXML
     private void dwnStart() {
         System.out.println("start not ready yet");
-        
+
         task = createWork();
-        
+
         btnStart.disableProperty().bind(task.stateProperty().isNotEqualTo(READY));
         btnCancel.disableProperty().bind(task.stateProperty().isNotEqualTo(RUNNING));
         prgBar.progressProperty().bind(task.progressProperty());
         percentage.textProperty().bind(task.messageProperty());
-      
+
         thread = new Thread(FxmlDownloadController.threads, task, fileName);
         thread.setDaemon(true);
         thread.start();
-    }    
+    }
 
     @FXML
     private void dwnCancel() {
@@ -90,7 +97,7 @@ public class FxmlControlDownloadController implements Initializable {
             System.out.println("in openfile");
             Desktop.getDesktop().open(fileLocation);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            showErrorMessage(ex.getMessage(), ex);
         }
     }
     /*=================End of FXML functions======================================*/
@@ -108,22 +115,40 @@ public class FxmlControlDownloadController implements Initializable {
         return new Task() {
 
             @Override
-            protected Object call() throws Exception {
-                System.out.println("task started");
-                int count = 0;
-                while (count <= 100) {  
-                    if(task.isCancelled()){
-                        System.out.println("task is cancelled");
-                        break;
+            protected Object call() {
+                try {
+                    System.out.println("task started");
+                    URL url = new URL(downloadURL);
+                    URLConnection connection = url.openConnection();
+                    long fileSize = connection.getContentLengthLong();
+                    if (fileSize == -1) {
+                        FileNotFoundException fnfe = new FileNotFoundException(downloadURL);
+                        showErrorMessage(fnfe.getMessage(), fnfe);
+                    } else {
+                        byte[] buffer = new byte[1024];
+                        int byteCount = -1;
+                        int bytesRead = 0;
+                        try (InputStream input = new BufferedInputStream(connection.getInputStream());
+                                OutputStream output = new FileOutputStream(fileLocation)) {
+                            while (!task.isCancelled() && byteCount <= fileSize) {
+                                byteCount = input.read(buffer);
+                                if (byteCount == -1) {
+                                    break;
+                                } else {
+                                    output.write(buffer, 0, byteCount);
+                                    bytesRead += byteCount;
+                                    updateProgress(bytesRead, fileSize);
+                                    updateMessage(String.format("%d bytes / %d bytes", bytesRead, fileSize));
+                                }
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                        updateProgress(count, 100);
-                        updateMessage(count + "/" + "100");
-                        ++count;
-                        try {
-                            Thread.sleep(1500);
-                        } catch (InterruptedException ex) {
-                            System.out.println("call sleep interrupted");
-                        }                    
+                } catch (MalformedURLException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
                 return true;
             }
@@ -133,6 +158,7 @@ public class FxmlControlDownloadController implements Initializable {
                 super.cancelled();
                 System.out.println(thread.getName() + " the task was cancelled");
                 updateMessage(bundle.getString(Keys.DWN_CAN));
+                updateProgress(1, 1);
             }
 
             @Override
@@ -140,18 +166,21 @@ public class FxmlControlDownloadController implements Initializable {
                 super.failed();
                 System.out.println(thread.getName() + " the task was faild");
                 updateMessage(bundle.getString(Keys.DWN_CAN));
-//                if(task.getException()!=null)
-//                    showErrorMessage(task.getException().getMessage(), task.getException());                
+                updateProgress(1, 1);
+                if (task.getException() != null) {
+                    showErrorMessage(task.getException().getMessage(), task.getException());
+                }
             }
 
             @Override
             protected void succeeded() {
                 super.succeeded();
                 System.out.println(thread.getName() + " the task was succeeded");
+                btnOpen.setDisable(false);
             }
         };
     }
-    
+
     private void showAlertDialog(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -171,9 +200,9 @@ public class FxmlControlDownloadController implements Initializable {
             }
         } else {
             alert.showAndWait();
-        }        
+        }
     }
-    
+
     private void showErrorMessage(String message, Throwable... excp) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(bundle.getString(Keys.ERROR));
