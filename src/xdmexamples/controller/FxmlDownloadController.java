@@ -72,7 +72,7 @@ public class FxmlDownloadController implements Initializable {
         task = createWork(fileName, fileLocation);
         prgIndicator.visibleProperty().bind(task.stateProperty().isEqualTo(RUNNING));
 
-        thread = new Thread(threads, task, fileName);
+        thread = new Thread(task, fileName);
         thread.setDaemon(true);
         thread.start();
     }
@@ -105,9 +105,9 @@ public class FxmlDownloadController implements Initializable {
                     try {
                         System.out.println("call started");
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
-                        FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
-                        fcdc.initData(urlText.getText(), fileName, fileLocation);
                         ttlPane = (TitledPane) loader.load();
+                        FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
+                        fcdc.initData(urlText.getText(), fileName, fileLocation);                        
                     } catch (IOException ex) {
                         System.out.println("Error: "+ex.getMessage());                        
                     }
