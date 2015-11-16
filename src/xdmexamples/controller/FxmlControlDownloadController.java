@@ -54,4 +54,10 @@ public class FxmlControlDownloadController implements Initializable{
         System.out.println("start not ready yet");
     }
     /*=================End of FXML functions======================================*/
+
+    void initData(String text, String fileName, String fileLocation) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 }
