@@ -10,11 +10,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import static javafx.concurrent.Worker.State.READY;
 import static javafx.concurrent.Worker.State.RUNNING;
@@ -31,8 +36,10 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import xdmexamples.helper.Notification;
 import xdmexamples.preloader.Keys;
 
 public class FxmlControlDownloadController implements Initializable {
@@ -61,11 +68,15 @@ public class FxmlControlDownloadController implements Initializable {
     private File fileLocation;
     private Task task;
     private Thread thread;
+    private Notification.Notifier notifier;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("download controller started");
         bundle = resources;
+        Platform.runLater(() -> {
+            notifier = Notification.Notifier.INSTANCE;
+        });
     }
 
     /*====================FXML functions==========================================*/
@@ -79,10 +90,11 @@ public class FxmlControlDownloadController implements Initializable {
         btnCancel.disableProperty().bind(task.stateProperty().isNotEqualTo(RUNNING));
         prgBar.progressProperty().bind(task.progressProperty());
         percentage.textProperty().bind(task.messageProperty());
-
-        thread = new Thread(FxmlDownloadController.threads, task, fileName);
-        thread.setDaemon(true);
-        thread.start();
+        if (checkInternetConnection()) {
+            thread = new Thread(FxmlDownloadController.threads, task, fileName);
+            thread.setDaemon(true);
+            thread.start();
+        }
     }
 
     @FXML
@@ -131,6 +143,10 @@ public class FxmlControlDownloadController implements Initializable {
                         try (InputStream input = new BufferedInputStream(connection.getInputStream());
                                 OutputStream output = new FileOutputStream(fileLocation)) {
                             while (!task.isCancelled() && byteCount <= fileSize) {
+                                if (thread.isInterrupted()) {
+                                    task.cancel();
+                                    break;
+                                }
                                 byteCount = input.read(buffer);
                                 if (byteCount == -1) {
                                     break;
@@ -142,13 +158,13 @@ public class FxmlControlDownloadController implements Initializable {
                                 }
                             }
                         } catch (IOException ex) {
-                            ex.printStackTrace();
+                            showErrorMessage(ex.getMessage(), ex);
                         }
                     }
                 } catch (MalformedURLException ex) {
-                    ex.printStackTrace();
+                    showErrorMessage(ex.getMessage(), ex);
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    showErrorMessage(ex.getMessage(), ex);
                 }
                 return true;
             }
@@ -159,6 +175,9 @@ public class FxmlControlDownloadController implements Initializable {
                 System.out.println(thread.getName() + " the task was cancelled");
                 updateMessage(bundle.getString(Keys.DWN_CAN));
                 updateProgress(1, 1);
+                notifier.notify(new Notification(bundle.getString(Keys.PRG_NAME),
+                        fileName + " " + bundle.getString(Keys.DWN_CAN),
+                        Notification.INFO_ICON));
             }
 
             @Override
@@ -169,6 +188,9 @@ public class FxmlControlDownloadController implements Initializable {
                 updateProgress(1, 1);
                 if (task.getException() != null) {
                     showErrorMessage(task.getException().getMessage(), task.getException());
+                    notifier.notify(new Notification(bundle.getString(Keys.PRG_NAME),
+                            fileName + " " + bundle.getString(Keys.DWN_FAIL),
+                            Notification.ERROR_ICON));
                 }
             }
 
@@ -177,6 +199,9 @@ public class FxmlControlDownloadController implements Initializable {
                 super.succeeded();
                 System.out.println(thread.getName() + " the task was succeeded");
                 btnOpen.setDisable(false);
+                notifier.notify(new Notification(bundle.getString(Keys.PRG_NAME),
+                        fileName + " " + bundle.getString(Keys.DWN_SUC),
+                        Notification.SUCCESS_ICON));
             }
         };
     }
@@ -197,6 +222,8 @@ public class FxmlControlDownloadController implements Initializable {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == btnYes) {
                 task.cancel();
+                VBox vbox = (VBox) titledPane.getParent();
+                vbox.getChildren().remove(titledPane);
             }
         } else {
             alert.showAndWait();
@@ -236,5 +263,23 @@ public class FxmlControlDownloadController implements Initializable {
             alert.getDialogPane().setExpandableContent(expContent);
         }
         alert.showAndWait();
+    }
+
+    private boolean checkInternetConnection() {
+        Socket socket = new Socket();
+        InetSocketAddress adrs = new InetSocketAddress("google.com", 80);
+        try {
+            socket.connect(adrs, 3000);
+            return true;
+        } catch (Exception e) {
+            showAlertDialog(Alert.AlertType.WARNING, bundle.getString(Keys.WARNING), bundle.getString(Keys.CHK_INT));
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                showErrorMessage(ex.getMessage(), ex);
+            }
+        }
+        return false;
     }
 }

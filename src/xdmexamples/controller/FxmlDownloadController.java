@@ -21,6 +21,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -106,6 +107,7 @@ public class FxmlDownloadController implements Initializable {
                         System.out.println("call started");
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/fxml/fxmlControlDownload.fxml"), bundle);
                         ttlPane = (TitledPane) loader.load();
+                        Tooltip.install(ttlPane, new Tooltip(fileName));
                         FxmlControlDownloadController fcdc = loader.<FxmlControlDownloadController>getController();
                         fcdc.initData(urlText.getText(), fileName, fileLocation);                        
                     } catch (IOException ex) {

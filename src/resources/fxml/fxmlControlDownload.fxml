@@ -57,16 +57,25 @@
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="%dwn_b1tp" />
+                     </tooltip>
                   </Button>
                   <Button fx:id="btnCancel" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#dwnCancel" text="%cancel" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="%dwn_b2tp" />
+                     </tooltip>
                   </Button>
                   <Button fx:id="btnOpen" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#openFile" text="%dwn_btn5" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="Times New Roman Bold" size="18.0" />
                      </font>
+                     <tooltip>
+                        <Tooltip text="%dwn_b3tp" />
+                     </tooltip>
                   </Button>
                </children>
             </HBox>
