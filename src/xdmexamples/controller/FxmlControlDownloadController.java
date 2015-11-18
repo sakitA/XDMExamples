@@ -39,7 +39,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import xdmexamples.helper.Notification;
+import xdmexamples.utility.Notification;
 import xdmexamples.preloader.Keys;
 
 public class FxmlControlDownloadController implements Initializable {

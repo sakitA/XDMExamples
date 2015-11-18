@@ -37,9 +37,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import xdmexamples.helper.DataRegistry;
-import xdmexamples.helper.Registry;
-import xdmexamples.helper.WindowsRegistry;
+import xdmexamples.utility.DataRegistry;
+import xdmexamples.utility.Registry;
+import xdmexamples.utility.WindowsRegistry;
 import xdmexamples.preloader.Keys;
 
 /**

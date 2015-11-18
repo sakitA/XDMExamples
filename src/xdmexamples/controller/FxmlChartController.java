@@ -54,7 +54,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.controlsfx.control.CheckComboBox;
-import xdmexamples.helper.ValuteParser;
+import xdmexamples.utility.ValuteParser;
 import xdmexamples.preloader.Keys;
 
 /**

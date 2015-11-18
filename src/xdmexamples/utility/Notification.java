@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package xdmexamples.helper;
+package xdmexamples.utility;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
