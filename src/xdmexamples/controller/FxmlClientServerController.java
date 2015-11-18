@@ -10,6 +10,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ import static javafx.scene.control.Alert.AlertType.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import xdmexamples.preloader.Keys;
+import xdmexamples.utility.Client;
 import xdmexamples.utility.Server;
 
 /**
@@ -68,9 +70,10 @@ public class FxmlClientServerController implements Initializable {
     private int maxClientCount;
     private static int clientCount;
     private Server server;
-    private Service startServerService, stopServerService;
-    private boolean oncestarted, oncestopped, stopServer;
-
+    private Client client;
+    private Service serverService, clientService;
+    private static boolean serverflag, clientflag;
+    
     /**
      * Initializes the controller class.
      *
@@ -85,9 +88,7 @@ public class FxmlClientServerController implements Initializable {
         clientCount = 0;
 
         System.out.println("max client count:" + maxClientCount);
-        oncestarted = false;
-        oncestopped = false;
-        stopServer = true;
+        serverflag = clientflag = false;
         setDisable(false);
 
         txtArea.textProperty().addListener((obser, oldValue, newValue) -> {
@@ -100,31 +101,36 @@ public class FxmlClientServerController implements Initializable {
         });
 
         server = new Server(txtArea, serverMessage, maxClientCount);
-        startServerService = new Service() {
+        serverService = new Service() {
 
             @Override
             protected Task createTask() {
-                return startServerTask();
+                return serverTask();
             }
         };
-        stopServerService = new Service() {
+        clientService = new Service(){
 
             @Override
             protected Task createTask() {
-                return stopServerTask();
-            }
+                return clientTask();
+            }            
         };
+        
+        tabPane.getTabs().addListener(new ListChangeListener<Tab>() {
+
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Tab> c) {
+                clientCount = tabPane.getTabs().size();
+                System.out.println("clientCount:"+clientCount);
+            }
+        });
     }
 
     /*=======================================FXML Function============================================*/
     @FXML
     private void addClient() {
-
-        ++clientCount;
-        System.out.println("client:" + clientCount);
-        if (clientCount > maxClientCount) {
+        if (clientCount >= maxClientCount) {
             showAlertDialog(WARNING, bundle.getString(Keys.WARNING), bundle.getString(Keys.CS_MSG1));
-            --clientCount;
         } else {
             String clientName = null;
             while (clientName == null) {
@@ -148,11 +154,11 @@ public class FxmlClientServerController implements Initializable {
         });
         setDisable(true);
 
-        if (oncestarted) {
-            startServerService.restart();
+        if (serverflag) {
+            serverService.restart();
         } else {
-            startServerService.start();
-            oncestarted = true;
+            serverService.start();
+            serverflag = true;
         }
     }
 
@@ -168,11 +174,11 @@ public class FxmlClientServerController implements Initializable {
         }
         if (result) {
             setDisable(false);
-            if (oncestopped) {
-                stopServerService.restart();
+            if (serverflag) {
+                serverService.restart();
             } else {
-                stopServerService.start();
-                oncestopped = true;
+                serverService.start();
+                serverflag = true;
             }
         }
     }
@@ -268,36 +274,38 @@ public class FxmlClientServerController implements Initializable {
 
         Tab tab = new Tab(clientName);
         tab.setClosable(true);
-        tab.setOnCloseRequest(e -> {
-            --clientCount;
-            System.out.println("client count:" + clientCount);
-        });
         tab.setContent(vbox);
-
+        client = new Client(tab);
+        if(clientflag)
+            clientService.restart();
+        else{
+            clientService.start();
+            clientflag = true;
+        }        
         return tab;
     }
-
-    private Task startServerTask() {
-        return new Task() {
+    
+    private Task serverTask(){
+        return new Task(){
 
             @Override
-            protected Void call() throws Exception {
-                if (!server.isServerRunnning()) {
+            protected Object call() throws Exception {
+                if(server.isServerRunnning()){
+                    server.stopServer();
+                }else{
                     server.startServer();
                 }
                 return null;
             }
         };
     }
-
-    private Task stopServerTask() {
-        return new Task() {
+    
+    private Task clientTask(){
+        return new Task(){
 
             @Override
-            protected Void call() throws Exception {
-                if (server.isServerRunnning()) {
-                    server.stopServer();
-                }
+            protected Object call() throws Exception {
+                client.runClient();
                 return null;
             }
         };

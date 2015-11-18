@@ -25,25 +25,28 @@ public class Server {
 
     private final TextArea textArea;
     private final TextField textField;
-    private final int portNumber = 9090;
+    private final int portNumber = 9000;
     private int maxClientCount;
     private ObjectOutputStream output;
     private ObjectInputStream input;
     private ServerSocket server;
     private Socket clientSocket;
-    private ExecutorService threadPool;
-    private Thread runningThread = null;
+    private final ExecutorService threadPool;
 
     private boolean running;
+    private static int counter;
 
     public Server(TextArea area, TextField field, int maxClientCount) {
+        counter = 0;
         this.maxClientCount = maxClientCount;
         threadPool = Executors.newFixedThreadPool(maxClientCount);
         textArea = area;
+        area.setEditable(false);
+        
         textField = field;
         textField.setOnKeyPressed(e->{
             if(e.getCode() == KeyCode.ENTER){
-                displayMessage(textField.getText());
+                sendData(textField.getText());
                 textField.setText("");
             }
         });        
@@ -56,11 +59,9 @@ public class Server {
     //step 1: create a ServerSocket
     public void startServer() {
         try {
-            synchronized(this){
-                this.runningThread = Thread.currentThread();
-            }
-            server = new ServerSocket(portNumber, maxClientCount);
+            server = new ServerSocket(portNumber);
             displayMessage("Server is running. There is no active client");
+            displayMessage("Server is waiting a client");
             running = true;
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -71,13 +72,14 @@ public class Server {
     //step 2: wait for a connection
     private void run() {
         while (isServerRunnning()) {
-            try {
-                displayMessage("Server is waiting a client");
+            try {          
+                displayMessage("Connected client count:"+counter);
                 clientSocket = server.accept();
-                displayMessage(clientSocket.getInetAddress().getHostName()+" connected to the server");
+                ++counter;
             } catch (IOException e) {
                 if (!isServerRunnning()) {
                     clientSocket = null;
+                    --counter;
                     break;
                 }
                 throw new RuntimeException(
@@ -107,15 +109,20 @@ public class Server {
     private void processConnection(){
         String message;
         boolean terminate = false;
-        do{
+        while(true){
             try {
                 message = (String)input.readObject();
-                terminate = message.trim().equalsIgnoreCase("quit");
-                displayMessage("\n"+message);
+                terminate = message.contains("~");
+                if(terminate){
+                    displayMessage("\n"+message.substring(0,message.indexOf("~"))+" leave the server");
+                    break;
+                }
+                else
+                    displayMessage(message);
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
-        }while(!terminate);
+        }
     }
     
     //step 5: close the server
@@ -140,15 +147,15 @@ public class Server {
         }
     }
 
-    private void displayMessage(final String message) {
+    private synchronized void displayMessage(final String message) {
         Platform.runLater(()->{
             textArea.appendText(message+"\n");
         });        
     }
     
-    private void sendData(String message){
+    private synchronized void sendData(String message){
         try {
-            message = "<Server>"+message;
+            message = "Server>"+message;
             output.writeObject(message);    
             output.flush();
             displayMessage(message);
