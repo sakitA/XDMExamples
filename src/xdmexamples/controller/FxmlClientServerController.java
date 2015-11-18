@@ -10,8 +10,11 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -27,9 +30,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import static javafx.scene.control.Alert.AlertType.*;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import xdmexamples.preloader.Keys;
 import xdmexamples.utility.Server;
-
 
 /**
  * FXML Controller class
@@ -37,7 +41,7 @@ import xdmexamples.utility.Server;
  * @author sakit
  */
 public class FxmlClientServerController implements Initializable {
-    
+
     /*================================FXML Decleration============================*/
     @FXML
     private Button btnClear;
@@ -52,102 +56,128 @@ public class FxmlClientServerController implements Initializable {
     @FXML
     private TextArea txtArea;
     @FXML
+    private TextField serverMessage;
+    @FXML
     private TabPane tabPane;
     @FXML
     private GridPane gridPane;
     @FXML
     private ResourceBundle bundle;
     /*============================End of FXML Decleration=========================*/
-    
+
     private int maxClientCount;
     private static int clientCount;
     private Server server;
-    
+    private Service startServerService, stopServerService;
+    private boolean oncestarted, oncestopped, stopServer;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        maxClientCount = (int)slider.getValue();
+        maxClientCount = (int) slider.getValue();
         bundle = rb;
         clientCount = 0;
-        
-        System.out.println("max client count:"+maxClientCount);
-        
+
+        System.out.println("max client count:" + maxClientCount);
+        oncestarted = false;
+        oncestopped = false;
+        stopServer = true;
         setDisable(false);
-        
-        txtArea.textProperty().addListener((obser,oldValue,newValue)->{
+
+        txtArea.textProperty().addListener((obser, oldValue, newValue) -> {
             btnClear.setDisable(txtArea.getText().isEmpty());
         });
-        
-        slider.valueProperty().addListener((obser,oldValue,newValue)->{
+
+        slider.valueProperty().addListener((obser, oldValue, newValue) -> {
             maxClientCount = newValue.intValue();
-            System.out.println("max client count:"+maxClientCount);
+            System.out.println("max client count:" + maxClientCount);
         });
-    }    
- 
+
+        server = new Server(txtArea, serverMessage, maxClientCount);
+        startServerService = new Service() {
+
+            @Override
+            protected Task createTask() {
+                return startServerTask();
+            }
+        };
+        stopServerService = new Service() {
+
+            @Override
+            protected Task createTask() {
+                return stopServerTask();
+            }
+        };
+    }
+
     /*=======================================FXML Function============================================*/
     @FXML
-    private void addClient(){
-        
+    private void addClient() {
+
         ++clientCount;
-        System.out.println("client:"+clientCount);
-        if(clientCount>maxClientCount){
-            showAlertDialog(WARNING,bundle.getString(Keys.WARNING),bundle.getString(Keys.CS_MSG1));
+        System.out.println("client:" + clientCount);
+        if (clientCount > maxClientCount) {
+            showAlertDialog(WARNING, bundle.getString(Keys.WARNING), bundle.getString(Keys.CS_MSG1));
             --clientCount;
-        }else{
+        } else {
             String clientName = null;
-            while(clientName==null)
+            while (clientName == null) {
                 clientName = getClientName();
-            
-            TextArea txt = new TextArea();
-            Tab tab = new Tab(clientName);
-            tab.setClosable(true);
-            tab.setOnCloseRequest(e->{
-                --clientCount;
-                System.out.println("client count:"+clientCount);
-            });
-            tab.setContent(txt);
-            tabPane.getTabs().add(tab);
+            }
+
+            tabPane.getTabs().add(createTab(clientName));
         }
     }
-        
+
     @FXML
-    private void clearContent(){
+    private void clearContent() {
         txtArea.clear();
     }
-    
+
     @FXML
-    private void startServer(){
-        Stage stage = (Stage)btnStart.getScene().getWindow();
-        stage.setOnCloseRequest(e->{
-           System.exit(0);
+    private void startServer() {
+        Stage stage = (Stage) btnStart.getScene().getWindow();
+        stage.setOnCloseRequest(e -> {
+            System.exit(0);
         });
-        setDisable(true);        
-    }
-    
-    @FXML
-    private void stopServer(){
-        if(server.isServerRunnning()){
-            if(!tabPane.getTabs().isEmpty()){
-                boolean result = showAlertDialog(CONFIRMATION, bundle.getString(Keys.QUESTION), bundle.getString(Keys.CS_MSG2));
-                if(result){
-                    tabPane.getTabs().clear();
-                    clientCount = 0;
-                }
-            }
-            server.stopServer();
-            
-            setDisable(false);
+        setDisable(true);
+
+        if (oncestarted) {
+            startServerService.restart();
+        } else {
+            startServerService.start();
+            oncestarted = true;
         }
     }
-    
+
+    @FXML
+    private void stopServer() {
+        boolean result = true;
+        if (!tabPane.getTabs().isEmpty()) {
+            result = showAlertDialog(CONFIRMATION, bundle.getString(Keys.QUESTION), bundle.getString(Keys.CS_MSG2));
+            if (result) {
+                tabPane.getTabs().clear();
+                clientCount = 0;
+            }
+        }
+        if (result) {
+            setDisable(false);
+            if (oncestopped) {
+                stopServerService.restart();
+            } else {
+                stopServerService.start();
+                oncestopped = true;
+            }
+        }
+    }
+
     /*===================================End of FXML Function============================================*/
-    
     private boolean showAlertDialog(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -203,30 +233,73 @@ public class FxmlClientServerController implements Initializable {
         }
         alert.showAndWait();
     }
-    
-    private String getClientName(){
+
+    private String getClientName() {
         String fileName = null;
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(bundle.getString(Keys.FLNM));
         dialog.setHeaderText(bundle.getString(Keys.PRG_NAME));
         dialog.setContentText(bundle.getString(Keys.ENT_FLNM));
-        dialog.getEditor().setPromptText("example.txt");
+        dialog.getEditor().setPromptText("Naruto Uzumaki");
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
             fileName = result.get();
         }
-        return fileName==null || fileName.isEmpty() ? "Client "+clientCount : fileName;        
+        return fileName == null || fileName.isEmpty() ? "Client " + clientCount : fileName;
     }
 
-    private void restartServer() {
-        
-    }
-
-    private void setDisable(boolean disable){
+    private void setDisable(boolean disable) {
         btnStart.setDisable(disable);
         slider.setDisable(disable);
         btnStop.setDisable(!disable);
         btnAdd.setDisable(!disable);
+    }
+
+    private Tab createTab(final String clientName) {
+        TextField txtField = new TextField();
+
+        TextArea area = new TextArea();
+        txtArea.setEditable(false);
+
+        VBox vbox = new VBox(5, txtField, area);
+        VBox.setMargin(txtField, new Insets(5, 5, 0, 5));
+        VBox.setMargin(area, new Insets(0, 5, 5, 5));
+
+        Tab tab = new Tab(clientName);
+        tab.setClosable(true);
+        tab.setOnCloseRequest(e -> {
+            --clientCount;
+            System.out.println("client count:" + clientCount);
+        });
+        tab.setContent(vbox);
+
+        return tab;
+    }
+
+    private Task startServerTask() {
+        return new Task() {
+
+            @Override
+            protected Void call() throws Exception {
+                if (!server.isServerRunnning()) {
+                    server.startServer();
+                }
+                return null;
+            }
+        };
+    }
+
+    private Task stopServerTask() {
+        return new Task() {
+
+            @Override
+            protected Void call() throws Exception {
+                if (server.isServerRunnning()) {
+                    server.stopServer();
+                }
+                return null;
+            }
+        };
     }
 }

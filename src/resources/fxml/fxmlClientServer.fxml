@@ -18,14 +18,26 @@
     <RowConstraints maxHeight="1.7976931348623157E308" vgrow="ALWAYS" />
   </rowConstraints>
    <children>
-      <TabPane fx:id="tabPane" GridPane.hgrow="ALWAYS" />
-      <HBox spacing="7.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <TabPane fx:id="tabPane" maxWidth="1.7976931348623157E308" GridPane.hgrow="ALWAYS" />
+      <HBox maxWidth="1.7976931348623157E308" spacing="7.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <children>
-            <TextArea fx:id="txtArea" maxWidth="1.7976931348623157E308" prefHeight="221.0" prefWidth="436.0" promptText="%cs_txta" wrapText="true" HBox.hgrow="ALWAYS">
-               <font>
-                  <Font name="Times New Roman Bold" size="14.0" />
-               </font>
-            </TextArea>
+            <VBox maxWidth="1.7976931348623157E308" spacing="7.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <TextArea fx:id="txtArea" editable="false" maxWidth="1.7976931348623157E308" prefHeight="221.0" prefWidth="436.0" promptText="%cs_txta" wrapText="true" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Times New Roman Bold" size="14.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </TextArea>
+                  <TextField fx:id="serverMessage">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" />
+                     </VBox.margin>
+                  </TextField>
+               </children>
+            </VBox>
             <VBox alignment="CENTER" spacing="7.0">
                <children>
                   <Button fx:id="btnStart" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startServer" prefWidth="160.0" text="%cs_startser" wrapText="true">
@@ -81,6 +93,5 @@
             </VBox>
          </children>
       </HBox>
-      <VBox alignment="CENTER" GridPane.columnIndex="1" />
    </children>
 </GridPane>
