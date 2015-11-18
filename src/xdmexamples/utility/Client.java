@@ -74,7 +74,7 @@ public class Client {
 
     //step 1: connect to the client
     private void connectClient() throws IOException {
-        displayMessage(clientName+" attempting connect to the server\n");
+        displayMessage(clientName+" attempting connect to the server");
         connection = new Socket(host, portNumber);
         displayMessage(clientName+" connected to "+connection.getInetAddress());
     }
@@ -96,8 +96,7 @@ public class Client {
                 displayMessage(message);
             } catch (ClassNotFoundException ex) {
                 ex.printStackTrace();
-            } catch(EOFException eofe){
-                System.out.println(clientName+" eofe happend");
+            } catch(EOFException eofe){                
             }
         }
     }

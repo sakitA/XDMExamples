@@ -124,6 +124,7 @@ public class FxmlClientServerController implements Initializable {
                 System.out.println("clientCount:"+clientCount);
             }
         });
+       
     }
 
     /*=======================================FXML Function============================================*/
@@ -136,7 +137,7 @@ public class FxmlClientServerController implements Initializable {
             while (clientName == null) {
                 clientName = getClientName();
             }
-
+            server.setName(clientName);
             tabPane.getTabs().add(createTab(clientName));
         }
     }
@@ -309,5 +310,5 @@ public class FxmlClientServerController implements Initializable {
                 return null;
             }
         };
-    }
+    }    
 }
