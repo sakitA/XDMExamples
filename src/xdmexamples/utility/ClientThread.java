@@ -43,13 +43,14 @@ public class ClientThread extends Thread {
         textArea.setEditable(false);
 
         textField = tf;
-        textField.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                sendData(textField.getText());
-                textField.setText("");
-            }
-        });
+//        textField.setOnKeyPressed(e -> {
+//            if (e.getCode() == KeyCode.ENTER) {
+//                sendData(textField.getText());
+//                textField.setText("");
+//            }
+//        });
         displayMessage(clientName+" connected to the server");
+        displayMessage("Connected client count:"+counter);
         setName(clientName);
     }
 
@@ -69,6 +70,7 @@ public class ClientThread extends Thread {
                 if (terminate) {
                     displayMessage("\n" + message.substring(0, message.indexOf("@@@@@")) + " leave the server");
                     --counter;
+                    displayMessage("Connected client count:"+counter);
                     break;
                 } else {
                     displayMessage(message);
@@ -87,7 +89,7 @@ public class ClientThread extends Thread {
         });
     }
 
-    private synchronized void sendData(String message) {
+    public synchronized void sendData(String message) {
         try {
             message = "Server>" + message;
             output.writeObject(message);
@@ -112,5 +114,9 @@ public class ClientThread extends Thread {
         } catch (IOException ex) {
             System.err.println("clearing process error:" + ex.getMessage());
         }
+    }
+    
+    public static int getClientCount(){
+        return counter;
     }
 }

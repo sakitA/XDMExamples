@@ -10,6 +10,8 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -73,6 +75,7 @@ public class FxmlClientServerController implements Initializable {
     private Client client;
     private Service serverService, clientService;
     private static boolean serverflag, clientflag;
+    public static String selectedtab;
     
     /**
      * Initializes the controller class.
@@ -125,6 +128,15 @@ public class FxmlClientServerController implements Initializable {
             }
         });
        
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>(){
+
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                System.out.println("selected tab:"+newValue.getText());
+                if(newValue!=null)
+                    selectedtab=newValue.getText();
+            }
+        });
     }
 
     /*=======================================FXML Function============================================*/

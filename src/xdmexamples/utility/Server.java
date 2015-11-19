@@ -8,13 +8,11 @@ package xdmexamples.utility;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import xdmexamples.controller.FxmlClientServerController;
 
 /**
  *
@@ -23,12 +21,13 @@ import javafx.scene.control.TextField;
 public class Server {
 
     private final int portNumber = 9000;
-    private int maxClientCount;
+    private static int maxClientCount;
     private ServerSocket server;
     private Socket clientSocket;
     private TextArea textArea;
     private TextField textField;
     private String clientName;
+    private static ClientThread[] threads;
 
     private boolean running;
 
@@ -36,6 +35,17 @@ public class Server {
         this.maxClientCount = maxClientCount;
         textArea = area;
         textField = field;
+        textField.setOnKeyPressed(e->{
+            if(e.getCode()==KeyCode.ENTER){
+                String tabName = FxmlClientServerController.selectedtab;
+                for(int i=0;i<this.maxClientCount;i++){
+                    if(threads[i]!=null && threads[i].getName().equals(tabName))
+                        threads[i].sendData(textField.getText());                             
+                }
+                textField.setText("");
+            }
+        });
+        threads = new ClientThread[maxClientCount];
     }
 
     public boolean isServerRunnning() {
@@ -58,8 +68,9 @@ public class Server {
         try {
             while (isServerRunnning()) {
                 clientSocket = server.accept();
-                ClientThread client = new ClientThread(clientSocket, textArea, textField, clientName);
-                client.startClientThread();
+                int index = ClientThread.getClientCount();
+                threads[index] = new ClientThread(clientSocket, textArea, textField, clientName);
+                threads[index].startClientThread();
             }
         } catch (IOException e) {
             if (!isServerRunnning()) {
@@ -76,7 +87,7 @@ public class Server {
         }
     }
 
-    public synchronized void setName(String name) {
+    public void setName(String name) {
         clientName = name;
     }
 

@@ -113,7 +113,7 @@ public class Client {
     
     public synchronized void stopClient(){
         stop = true;
-        sendData("~");
+        sendData("@@@@@");
     }
 
     private synchronized void sendData(String text) {
