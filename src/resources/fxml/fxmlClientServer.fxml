@@ -12,6 +12,7 @@
   <columnConstraints>
     <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
     <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="1.7976931348623157E308" vgrow="ALWAYS" />
@@ -38,60 +39,60 @@
                   </TextField>
                </children>
             </VBox>
-            <VBox alignment="CENTER" spacing="7.0">
+         </children>
+      </HBox>
+      <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" spacing="7.0" GridPane.columnIndex="2" GridPane.rowSpan="2">
+         <children>
+            <Button fx:id="btnStart" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startServer" prefWidth="160.0" text="%cs_startser" wrapText="true">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="3.0" right="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btnStop" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#stopServer" prefWidth="160.0" text="%cs_stopser" wrapText="true">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="3.0" right="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btnClear" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clearContent" prefWidth="160.0" text="%cs_clear" wrapText="true">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="3.0" right="5.0" />
+               </VBox.margin>
+            </Button>
+            <Button fx:id="btnAdd" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addClient" prefWidth="160.0" text="%cs_addc">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="3.0" right="5.0" />
+               </VBox.margin>
+            </Button>
+            <VBox spacing="15.0">
                <children>
-                  <Button fx:id="btnStart" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startServer" prefWidth="160.0" text="%cs_startser" wrapText="true">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%cs_maxc">
                      <font>
                         <Font name="Times New Roman Bold" size="14.0" />
                      </font>
                      <VBox.margin>
-                        <Insets left="3.0" right="5.0" />
+                        <Insets left="5.0" top="7.0" />
                      </VBox.margin>
-                  </Button>
-                  <Button fx:id="btnStop" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#stopServer" prefWidth="160.0" text="%cs_stopser" wrapText="true">
-                     <font>
-                        <Font name="Times New Roman Bold" size="14.0" />
-                     </font>
+                  </Text>
+                  <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="7.0" min="1.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="3.0">
                      <VBox.margin>
-                        <Insets left="3.0" right="5.0" />
+                        <Insets left="5.0" right="5.0" />
                      </VBox.margin>
-                  </Button>
-                  <Button fx:id="btnClear" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clearContent" prefWidth="160.0" text="%cs_clear" wrapText="true">
-                     <font>
-                        <Font name="Times New Roman Bold" size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets left="3.0" right="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="btnAdd" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addClient" prefWidth="160.0" text="%cs_addc">
-                     <font>
-                        <Font name="Times New Roman Bold" size="14.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets left="3.0" right="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <VBox spacing="15.0">
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%cs_maxc">
-                           <font>
-                              <Font name="Times New Roman Bold" size="14.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="5.0" top="7.0" />
-                           </VBox.margin>
-                        </Text>
-                        <Slider fx:id="slider" blockIncrement="1.0" majorTickUnit="1.0" max="7.0" min="1.0" minorTickCount="2" showTickLabels="true" showTickMarks="true" value="3.0">
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </Slider>
-                     </children>
-                  </VBox>
+                  </Slider>
                </children>
             </VBox>
          </children>
-      </HBox>
+      </VBox>
    </children>
 </GridPane>

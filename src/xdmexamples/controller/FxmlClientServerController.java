@@ -5,6 +5,7 @@
  */
 package xdmexamples.controller;
 
+import java.awt.Font;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -76,7 +77,7 @@ public class FxmlClientServerController implements Initializable {
     private Service serverService, clientService;
     private static boolean serverflag, clientflag;
     public static String selectedtab;
-    
+
     /**
      * Initializes the controller class.
      *
@@ -111,30 +112,31 @@ public class FxmlClientServerController implements Initializable {
                 return serverTask();
             }
         };
-        clientService = new Service(){
+        clientService = new Service() {
 
             @Override
             protected Task createTask() {
                 return clientTask();
-            }            
+            }
         };
-        
+
         tabPane.getTabs().addListener(new ListChangeListener<Tab>() {
 
             @Override
             public void onChanged(ListChangeListener.Change<? extends Tab> c) {
                 clientCount = tabPane.getTabs().size();
-                System.out.println("clientCount:"+clientCount);
+                System.out.println("clientCount:" + clientCount);
             }
         });
-       
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>(){
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
 
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                System.out.println("selected tab:"+newValue.getText());
-                if(newValue!=null)
-                    selectedtab=newValue.getText();
+                if (newValue != null) {
+                    System.out.println("selected tab:" + newValue.getText());
+                    selectedtab = newValue.getText();
+                }
             }
         });
     }
@@ -145,12 +147,11 @@ public class FxmlClientServerController implements Initializable {
         if (clientCount >= maxClientCount) {
             showAlertDialog(WARNING, bundle.getString(Keys.WARNING), bundle.getString(Keys.CS_MSG1));
         } else {
-            String clientName = null;
-            while (clientName == null) {
-                clientName = getClientName();
+            String clientName = getClientName();
+            if(clientName!=null){
+                server.setName(clientName);
+                tabPane.getTabs().add(createTab(clientName));
             }
-            server.setName(clientName);
-            tabPane.getTabs().add(createTab(clientName));
         }
     }
 
@@ -223,7 +224,8 @@ public class FxmlClientServerController implements Initializable {
         alert.setTitle(bundle.getString(Keys.ERROR));
         alert.setHeaderText(bundle.getString(Keys.PRG_NAME));
         alert.setContentText(message);
-
+        Stage st = (Stage) alert.getDialogPane().getScene().getWindow();
+        st.getIcons().add(new Image(getClass().getResourceAsStream("/resources/images/azer_emblem.png")));
         if (excp.length > 0) {
             // Create expandable Exception.
             StringWriter sw = new StringWriter();
@@ -254,18 +256,29 @@ public class FxmlClientServerController implements Initializable {
     }
 
     private String getClientName() {
-        String fileName = null;
-        TextInputDialog dialog = new TextInputDialog();
+        String clientName = bundle.getString(Keys.CS_CLNM)+ (clientCount+1);
+        TextInputDialog dialog = new TextInputDialog(clientName);
+       
+        Stage st = (Stage) dialog.getDialogPane().getScene().getWindow();
+        st.getIcons().add(new Image(getClass().getResourceAsStream("/resources/images/azer_emblem.png")));
+        
         dialog.setTitle(bundle.getString(Keys.FLNM));
         dialog.setHeaderText(bundle.getString(Keys.PRG_NAME));
-        dialog.setContentText(bundle.getString(Keys.ENT_FLNM));
-        dialog.getEditor().setPromptText("Naruto Uzumaki");
+        dialog.setContentText(bundle.getString(Keys.ENT_FLNM));        
+        dialog.getEditor().setPromptText(bundle.getString(Keys.CS_TFTT));
+        
+        ButtonType btnYes = new ButtonType(bundle.getString(Keys.OK), ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCnl = new ButtonType(bundle.getString(Keys.CANCEL), ButtonBar.ButtonData.CANCEL_CLOSE);     
+        
+        dialog.getDialogPane().getButtonTypes().setAll(btnYes, btnCnl);
+
         // Traditional way to get the response value.
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()) {
-            fileName = result.get();
-        }
-        return fileName == null || fileName.isEmpty() ? "Client " + clientCount : fileName;
+            clientName = result.get();
+        } else
+            clientName = null;
+        return clientName;
     }
 
     private void setDisable(boolean disable) {
@@ -289,32 +302,32 @@ public class FxmlClientServerController implements Initializable {
         tab.setClosable(true);
         tab.setContent(vbox);
         client = new Client(tab);
-        if(clientflag)
+        if (clientflag) {
             clientService.restart();
-        else{
+        } else {
             clientService.start();
             clientflag = true;
-        }        
+        }
         return tab;
     }
-    
-    private Task serverTask(){
-        return new Task(){
+
+    private Task serverTask() {
+        return new Task() {
 
             @Override
             protected Object call() throws Exception {
-                if(server.isServerRunnning()){
+                if (server.isServerRunnning()) {
                     server.stopServer();
-                }else{
+                } else {
                     server.startServer();
                 }
                 return null;
             }
         };
     }
-    
-    private Task clientTask(){
-        return new Task(){
+
+    private Task clientTask() {
+        return new Task() {
 
             @Override
             protected Object call() throws Exception {
@@ -322,5 +335,5 @@ public class FxmlClientServerController implements Initializable {
                 return null;
             }
         };
-    }    
+    }
 }
