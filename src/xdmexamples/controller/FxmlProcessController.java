@@ -5,6 +5,7 @@
  */
 package xdmexamples.controller;
 
+import com.sun.javafx.scene.control.skin.TableViewSkinBase;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -94,7 +95,6 @@ public class FxmlProcessController implements Initializable {
         pSession.setCellValueFactory(new PropertyValueFactory<>("pSession"));
         pSessionName.setCellValueFactory(new PropertyValueFactory<>("pSessionName"));
         pMemUsage.setCellValueFactory(new PropertyValueFactory<>("pMemUsage"));
-        tbView.setItems(proList);
 
         pieChart.visibleProperty().bind(Bindings.isNotEmpty(proList));
 
@@ -183,6 +183,7 @@ public class FxmlProcessController implements Initializable {
                         dp.setPMemUsage(Long.valueOf(tmp[0]));
                         proList.add(dp);
                     }
+                    tbView.getItems().addAll(proList);
                 } catch (IOException | NumberFormatException ex) {
                     ex.printStackTrace();
                 }
