@@ -1,11 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.image.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlProcessController">
-    
-</AnchorPane>
+<StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xdmexamples.controller.FxmlProcessController">
+   <children>
+      <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.0" minWidth="10.0" prefWidth="165.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="475.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="330.0" minHeight="10.0" prefHeight="251.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="256.0" minHeight="10.0" prefHeight="229.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" spacing="15.0" GridPane.rowIndex="1">
+               <children>
+                  <Button fx:id="btnProc" defaultButton="true" minWidth="120.0" mnemonicParsing="false" onAction="#getProcess" text="%pr_btn">
+                     <VBox.margin>
+                        <Insets top="7.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Times New Roman Bold" size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnClear" defaultButton="true" minWidth="120.0" mnemonicParsing="false" onAction="#clear" text="%pr_clr">
+                     <font>
+                        <Font name="Times New Roman Bold" size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+            <PieChart fx:id="pieChart" legendSide="RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" title="%pr_memu" visible="false" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+            <TableView fx:id="tbView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="pName" editable="false" prefWidth="75.0" text="%pr_imgn" />
+                <TableColumn fx:id="pPid" editable="false" prefWidth="75.0" text="%pr_pid" />
+                  <TableColumn fx:id="pSessionName" editable="false" prefWidth="75.0" text="%pr_sesn" />
+                  <TableColumn fx:id="pSession" editable="false" prefWidth="75.0" text="%pr_ses" />
+                  <TableColumn fx:id="pMemUsage" editable="false" prefWidth="75.0" text="%pr_memu" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children>
+      </GridPane>
+      <VBox fx:id="prgIndi" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" visible="false">
+         <children>
+            <ImageView pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/progind.gif" />
+               </image>
+            </ImageView>
+            <Label text="%pr_prc">
+               <font>
+                  <Font name="Times New Roman Bold" size="24.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </children>
+</StackPane>

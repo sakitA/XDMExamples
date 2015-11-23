@@ -80,14 +80,14 @@ public class XDMExamples extends Application {
             protected Void call() throws Exception {
                 int max = 23;
                 for (int i = 1; i <= max; i++) {
-                    Thread.sleep(250);
+                    Thread.sleep(50);
                     // Send progress to preloader
                     notifyPreloader(new Preloader.ProgressNotification(((double) i) / max));
                 }
                 // After init is ready, the app is ready to be shown
                 // Do this before hiding the preloader stage to prevent the 
                 // app from exiting prematurely
-                Thread.sleep(600);
+                Thread.sleep(100);
                 ready.setValue(Boolean.TRUE);
                 notifyPreloader(new Preloader.StateChangeNotification(
                         Preloader.StateChangeNotification.Type.BEFORE_START));

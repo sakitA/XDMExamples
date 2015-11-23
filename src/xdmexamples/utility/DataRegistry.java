@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
  */
 public class DataRegistry {
     
-    private SimpleStringProperty   enable; // set enable/disable value
+    private SimpleStringProperty    enable; // set enable/disable value
     private SimpleStringProperty    key;    // set key value
     private SimpleStringProperty    program;// set program value
     private SimpleStringProperty    data;   // set file value

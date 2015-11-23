@@ -43,7 +43,7 @@ public class WindowsRegistry {
 
         List<String> output = new ArrayList<>();
 
-        Process p;
+        java.lang.Process p;
         try {
             p = Runtime.getRuntime().exec(command);
             p.waitFor();
